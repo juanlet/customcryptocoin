@@ -1,10 +1,14 @@
 const sha256 = require('sha256');
-  
+const currentNodeUrl = process.argv[3]; 
+
 function Blockchain(){
     //this contains blocks of transactions, these are set in stone once the blocks are pushed into this array
     this.chain = [];
     //pending transactions, this newTransactions are not set in stone until a new block is created/mined
     this.pendingTransactions = [];
+
+    this.currentNodeUrl = currentNodeUrl;
+    this.networkNodes = [];
     //I create the genesys block, the first block of the chain
     this.createNewBlock(100,'0','0');
 }

@@ -8,6 +8,7 @@ const uuid = require('uuid/v1');
 const nodeAddress = uuid().split('-').join('');
 
 const bitcoin = new Blockchain();
+const port = process.argv[2];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -45,6 +46,24 @@ app.get('/mine',function(req,res){
    });
 });
 
-app.listen(3000, function(){
-  console.log("Listening on port 3000....");
+// register a node and broadcast it to the network
+app.post('/register-and-broadcast-node',function(req,res){
+  const newNodeUrl = req.body.newNodeUrl;
+
+});
+
+//register a node with the network
+app.post('/register-node',function(req,res){
+
+  
+});
+
+//register multiple nodes at once
+app.post('/register-nodes-bulk',function(req,res){
+
+  
+});
+
+app.listen(port, function(){
+  console.log(`Listening on port ${port}....`);
 });
