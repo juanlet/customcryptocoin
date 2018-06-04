@@ -77,4 +77,47 @@ Blockchain.prototype.proofOfWork = function(previousBlockHash,currentBlockData){
 
 }
 
+Blockchain.prototype.chainIsValid = function(blockchain){
+      //ALGORITHM USER: longest chain rule
+    let validChain = true;
+    //check that all blocks of the blockchain are valid
+    for(var i = 1; i< blockchain.length; i++){
+      
+        const currentBlock = blockchain[i];
+        const prevBlock = blockchain[i-1];
+        const blockHash = this.hashBlock(prevBlock['hash'],{transactions: currentBlock['transactions'], index: currentBlock['index']}, currentBlock['nonce']);
+        //all blocks should start with 0000 since that was the hashing condition to mine a block
+        if(blockHash.substring(0,4) !== '0000') {
+            console.log("invalid: there is a block with an invalid hash format ",blockHash.substring(0,4));
+            validChain = false;
+        }
+        //previousBlockHash of the current iterated block and the hash of the previous block in the chain should be equal
+        if(currentBlock['previousBlockHash'] !== prevBlock['hash']){
+            console.log("invalid: hash and previous hash of a pair of blocks doesn't match ",currentBlock['previousBlockHash'], prevBlock['hash']);
+            validChain = false;
+        }
+
+        //log the previous and current hash for visualization
+        console.log("Previous hash:", prevBlock['hash'])
+        console.log("Current hash: ",currentBlock['previousBlockHash'],"\n")
+        
+
+    }
+    //check that the genesis block(the first block of the chain) is valid
+    const genesisBlock = blockchain[0];
+
+    const correctNonce = genesisBlock['nonce'] === 100;
+    const correctPreviousBlockHash = genesisBlock['previousBlockHash'] === '0';
+    const correctHash = genesisBlock['hash'] === '0';
+    const correctTransactions = genesisBlock['transactions'].length === 0;
+
+    if(!correctNonce || !correctPreviousBlockHash || !correctHash || !correctTransactions) {
+        validChain = false;
+        console.log("invalid: Genesys block is invalid ",correctNonce, correctPreviousBlockHash, correctHash, correctTransactions);
+
+    }
+
+    return validChain;
+}
+
 module.exports = Blockchain;
